@@ -15,8 +15,48 @@ class CustomScrollViewScreen extends StatelessWidget {
           SliverAppBar(
             title: Text('CustomScrollViewScreen'),
           ),
-          renderChildSliverListBuilder(),
+          renderSliverGridBuilder(),
         ],
+      ),
+    );
+  }
+
+
+
+
+  // GridViewBuilder와 비슷함
+  SliverGrid renderSliverGridBuilder() {
+    return SliverGrid(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        return renderContainer(
+          color: rainbowColors[index % rainbowColors.length],
+          index: index,
+        );
+      },
+        childCount: 100,
+      ),
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 150,
+      ),
+    );
+  }
+
+
+
+  // GridView.count 유사함
+
+  SliverGrid renderChildSliverGrid() {
+    return SliverGrid(
+      delegate: SliverChildListDelegate(
+        numbers
+            .map(
+              (e) => renderContainer(
+                  color: rainbowColors[e % rainbowColors.length], index: e),
+            )
+            .toList(),
+      ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
       ),
     );
   }
@@ -36,21 +76,19 @@ class CustomScrollViewScreen extends StatelessWidget {
     );
   }
 
-
   // 기본형태에서 builder
 
   SliverList renderChildSliverListBuilder() {
     return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        return renderContainer(
-            color: rainbowColors[index % rainbowColors.length],
-            index: index);
-      },
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return renderContainer(
+              color: rainbowColors[index % rainbowColors.length], index: index);
+        },
         childCount: 100,
       ),
     );
   }
-
 
   // 이러한 형태가 필요할떄 customScrollView를 사용한다.
   Widget customadd() {

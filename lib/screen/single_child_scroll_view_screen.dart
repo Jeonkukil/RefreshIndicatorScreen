@@ -20,7 +20,7 @@ class SingleChildScrollViewScreen extends StatelessWidget {
 
     return MainLayout(
       title: 'SingleChildScrollView',
-      body: renderView(),
+      body: renderView (),
     );
   }
 

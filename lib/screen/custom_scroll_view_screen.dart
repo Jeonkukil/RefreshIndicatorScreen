@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:scrollable_widgets/const/colors.dart';
 
@@ -10,18 +12,48 @@ class CustomScrollViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+
         // slivers 는 List형태의 위젯을 전부 사용가능하다.
         slivers: [
-          SliverAppBar(
-            title: Text('CustomScrollViewScreen'),
-          ),
+          renderSliverAppbar(),
+
           renderSliverGridBuilder(),
+
         ],
       ),
     );
   }
 
 
+
+    // AppBar
+  SliverAppBar renderSliverAppbar() {
+    return SliverAppBar(
+      // 스크롤 했을때 리스트의 중간에도 AppBar가 내려오게 할 수 있다.
+      floating: true,
+      // 완전고정
+      pinned: false,
+      // 자석 효과
+      // floating true 에만 사용가능
+      snap: true,
+      // 맨 위에서 한계 이상으로 스크롤 했을떄
+      // 남는 공간을 차지
+      stretch: true,
+      // Appbar의 높이
+      expandedHeight: 200,
+      // Appbar가 더 빠르게 밀려들어가는 구간 설정
+      collapsedHeight: 150,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Image.asset('asset/img/logo.png',
+        fit: BoxFit.cover,),
+        title: Text('FlexibleSpace', style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),),
+      ),
+      title: Text('CustomScrollViewScreen'),
+    );
+  }
 
 
   // GridViewBuilder와 비슷함

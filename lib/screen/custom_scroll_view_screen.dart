@@ -3,6 +3,46 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:scrollable_widgets/const/colors.dart';
 
+class _SliverFixedHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double maxHeight;
+  final double minHeight;
+
+  _SliverFixedHeaderDelegate({
+    required this.child,
+    required this.maxHeight,
+    required this.minHeight,
+});
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(
+      child: child,
+    );
+  }
+  //  Extent는 높이를 말한다.
+  @override
+  // 최대 높이
+  double get maxExtent => maxHeight;
+
+  @override
+  // 최소 높이
+  double get minExtent => minHeight;
+
+  @override
+  // covariant - 상속된 클래스도 사용가능
+  // oldDelegate - build가 실행이 됐을때 이전 Delegate
+  // this - 새로운 Delegate
+  // shouldRebuild - 새로우 build를 해야할지 말지 결정
+  // false - build안함 true - 빌드 다시함
+  bool shouldRebuild(_SliverFixedHeaderDelegate oldDelegate) {
+    return oldDelegate.minHeight != minHeight ||
+    oldDelegate.maxHeight != maxHeight ||
+    oldDelegate.child != child;
+  }
+
+}
+
 class CustomScrollViewScreen extends StatelessWidget {
   final List<int> numbers = List.generate(100, (index) => index);
 
@@ -16,7 +56,9 @@ class CustomScrollViewScreen extends StatelessWidget {
         // slivers 는 List형태의 위젯을 전부 사용가능하다.
         slivers: [
           renderSliverAppbar(),
-
+          renderHeader(),
+          renderChildSliverList(),
+          renderHeader(),
           renderSliverGridBuilder(),
 
         ],
@@ -25,6 +67,28 @@ class CustomScrollViewScreen extends StatelessWidget {
   }
 
 
+
+  SliverPersistentHeader renderHeader() {
+    return  SliverPersistentHeader(
+      pinned: true,
+      delegate: _SliverFixedHeaderDelegate(
+        child: Container(
+          color: Colors.black,
+          child: Center(
+            child: Text(
+              '신기하지~',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        minHeight: 75,
+        maxHeight: 150,
+      ),
+    );
+  }
 
     // AppBar
   SliverAppBar renderSliverAppbar() {
@@ -44,7 +108,7 @@ class CustomScrollViewScreen extends StatelessWidget {
       // Appbar가 더 빠르게 밀려들어가는 구간 설정
       collapsedHeight: 150,
       flexibleSpace: FlexibleSpaceBar(
-        background: Image.asset('asset/img/logo.png',
+        background: Image.asset('asset/img/good.jpg',
         fit: BoxFit.cover,),
         title: Text('FlexibleSpace', style: TextStyle(
           color: Colors.black,
